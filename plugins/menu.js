@@ -51,7 +51,7 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
 try{
     
 let menu = {
-main: 'alive',
+main: '',
 download: '',
 group: '',
 owner: '',

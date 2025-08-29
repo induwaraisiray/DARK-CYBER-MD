@@ -25,12 +25,12 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
   *DARK-CYBER-MD Multidevice Whatsapp Bot Make By Hashiya Tech*
 
-     ⭕ FOLLOW 𝗢𝗨𝗥 𝗪𝗛𝗔𝗧𝗦𝗔𝗣𝗣 𝗖𝗛𝗔𝗡𝗡𝗘𝗟
+ ⭕ FOLLOW 𝗢𝗨𝗥 𝗪𝗛𝗔𝗧𝗦𝗔𝗣𝗣 𝗖𝗛𝗔𝗡𝗡𝗘𝗟
      
  _https://whatsapp.com/channel/0029VazhnLzK0IBdwXG4152o_
 
   
-> *POWERED BY DARK-CYBER-MD 📌️`;
+> *POWERED BY DARK-CYBER-MD 📌️*`;
 
 
         await conn.sendMessage(from, { 

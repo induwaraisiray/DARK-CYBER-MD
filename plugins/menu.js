@@ -94,7 +94,7 @@ let madeMenu = `
 
 > *© POWERED BY DARK-CYBER-MD*`
 
-return await conn.sendMessage(from,{image: {url: `https://i.ibb.co/Kjq97rcG/3575.jpg`},caption:madeMenu},{quoted: mek})
+return await conn.sendMessage(from,{image: {url: `https://i.ibb.co/dYsHR6j/619.jpg`},caption:madeMenu},{quoted: mek})
 }catch(e){
 console.log(e)
 reply(`𝔼𝕣𝕣𝕠𝕣`)

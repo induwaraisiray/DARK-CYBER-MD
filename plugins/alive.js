@@ -1,10 +1,10 @@
 const { cmd, commands } = require('../command');
 const os = require("os");
-const { runtime } = require('../lib/functions');
+const { runtime } = require('../lib/functions'); // Make sure this path is correct and the function is exported
 
 cmd({
     pattern: "alive",
-    alias: ["status", "runtime", "uptime"],
+    alias: ["status", "uptime"],
     desc: "Check uptime and system status",
     category: "main",
     react: "👋",
@@ -12,38 +12,34 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
+        // Ensure 'pushname' is correctly populated from your bot's framework.
+        // If 'pushname' is sometimes undefined, you might want to provide a fallback, e.g., 'mek.pushName || "User"'.
+        const userPushName = pushname || "මිත්‍රයා"; // Fallback if pushname is not available
+
         // Generate system status message
-        const status = `          
-╭━━〔 *DARK-CYBER-MD* 〕━━┈⊷
-┃◈╭─────────────·๏
-┃◈┃• *👋Hi*: ${pushname}
-┃◈┃• *⏳Uptime*:  ${runtime(process.uptime())} 
-┃◈┃• *📟 Ram*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
-┃◈┃• *👨‍💻 Owner*: Hashiya Tech </>
-┃◈└───────────┈⊷
-╰──────────────┈⊷
+        const status = `> *👋 HELLO..${userPushName}, DARK-CYBER-MD IS ALIVE NOW !! 🧸*
 
-  *DARK-CYBER-MD Multidevice Whatsapp Bot Make By Hashiya Tech*
+*HELLO 👋 , IM  DARK-CYBER-MD !! HOW CAN I HELP YOU TODAY 😊*
 
- ⭕ FOLLOW 𝗢𝗨𝗥 𝗪𝗛𝗔𝗧𝗦𝗔𝗣𝗣 𝗖𝗛𝗔𝗡𝗡𝗘𝗟
-     
- _https://whatsapp.com/channel/0029VazhnLzK0IBdwXG4152o_
+> *💤 ᴠᴇʀsɪᴏɴ  :* 0.0.1 ᴠ 
+> *✨ ʜᴏsᴛ    :* ${os.hostname()}
+> *⏰ ᴜᴘᴛɪᴍᴇ  :* ${runtime(process.uptime())}
+> *📶 ᴍᴇᴍᴏʀʏ   :* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
 
-  
-> *POWERED BY DARK-CYBER-MD 📌️*`;
+> *© POWERED BY DARK-CYBER-MD 🤍*`;
 
-
+        // Send the status message with an image
         await conn.sendMessage(from, { 
-            image: { url: `https://i.ibb.co/dYsHR6j/619.jpg` },  // Image URL
+            image: { url: `https://files.catbox.moe/l06cb8.jpg` },  // Ensure this URL is always accessible
             caption: status,
             contextInfo: {
-                mentionedJid: [m.sender],
+                mentionedJid: [m.sender], // Ensure m.sender is always a valid JID
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363395674230271@newsletter',
+                    newsletterJid: '120363395674230271@newsletter', // This JID needs to be valid and accessible
                     newsletterName: 'DARK-CYBER-MD',
-                    serverMessageId: 190
+                    serverMessageId: 143
                 }
             }
         }, { quoted: mek });
